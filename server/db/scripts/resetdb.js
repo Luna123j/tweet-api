@@ -11,7 +11,7 @@ const fs = require("fs").promises;
 const connObj = {
 	user: DB_USER,
 	host: DB_HOST,
-	password: DB_PASSWORD,
+	password: `${DB_PASSWORD}`,
 	port: DB_PORT,
 	database: DB_DATABASE,
 }

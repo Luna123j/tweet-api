@@ -18,6 +18,13 @@ router.get('/:id', (req, res) => {
   })
 });
 
+router.post('/', (req, res) => {
+  const user = req.body;
+  users.createUser(user.username,user.password).then(data => {
+    console.log(data);
+    res.json({message: data});
+  })
+});
 
 
 module.exports = router;
