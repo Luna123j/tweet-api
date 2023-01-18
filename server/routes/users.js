@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
   })
 });
 
-router.get('/users/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   users.getUserById(req.params.id).then(data => {
     console.log(data);
     res.json({users: data});
