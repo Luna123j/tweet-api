@@ -7,7 +7,7 @@ const testUser2 ={username: 'test', password: 'test'};
 describe('createUser', function() {
   it('should return user exist', function() {
     const message = users.createUser(testUser1.username,testUser1.password)
-    assert(message, "User exist");
+    assert(message, "Username exist");
   });
 
   it('should return user added successfully ', function() {

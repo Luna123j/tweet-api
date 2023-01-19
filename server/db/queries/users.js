@@ -12,20 +12,32 @@ const getUserById = id => {
   })
 }
 
+const getUserByusername = username => {
+  return db.query("SELECT * FROM users WHERE username = $1", [username]).then(data => {
+    return data.rows;
+  })
+}
+
 const createUser = (username, password) => {
 
-  //check if username exist
-  return db.query("SELECT count(*) FROM users WHERE username = $1", [username]).then(data => {
-    if (data.rows > 0) {
-      return "User exist"
-    }
-    
-    return db.query("INSERT INTO users (username, password) VALUES ($1,$2)", [username, password]).then(data => {
-      return "User added"
-    })
-  })
+  if (!username) {
+    return "Please enter valid username";
+  }
 
+  if (!password) {
+    return "Please enter valid password";
+  }
+
+  //check if username exist
+  if (getUserByusername(username) != null) {
+    return "Username exist";
+  }
+
+  return db.query("INSERT INTO users (username, password) VALUES ($1,$2) RETURN id", [username, password]).then(data => {
+    return {message:"User added",id: data.id};
+  })
 }
 
 
-module.exports = { getAllUsers, getUserById, createUser}
+
+module.exports = { getAllUsers, getUserById,getUserByusername, createUser }
