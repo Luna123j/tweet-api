@@ -67,7 +67,8 @@ router.post('/login', (req, res) => {
         return res.status(404).json({ message: "User dose not exist" })
       }
 
-      if (!bcrypt.compareSync(data[0].password, hashedPassword)) {
+      console.log("wwwwwwwwwwwww",data[0].password, hashedPassword)
+      if (bcrypt.compareSync(data[0].password, hashedPassword)) {
         return res.status(404).json({ message: "Wrong Password" })
       }
 

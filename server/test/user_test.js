@@ -119,7 +119,7 @@ describe('user routes', () => {
       return chai.request('http://localhost:8080')
         .post("/users/login")
         .type('form')
-        .send({ username: 'test', password: 'test' })
+        .send({ username: 'testtt', password: 'testtt' })
         .then((res) => {
           expect(res).to.have.status(404);
           assert(res.body.message, "User dose not exist")
@@ -134,7 +134,7 @@ describe('user routes', () => {
       return chai.request('http://localhost:8080')
         .post("/users/login")
         .type('form')
-        .send({ username: 'rick.sandchez@gmail.com', password: 'test' })
+        .send({ username: 'test', password: '123' })
         .then((res) => {
           expect(res).to.have.status(404);
           assert(res.body.message, "Wrong Password")
