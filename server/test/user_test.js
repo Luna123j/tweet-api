@@ -22,6 +22,7 @@ describe('user routes', () => {
           return agent.post('/users/register')
             .then(function(res) {
               expect(res).to.have.status(404);
+              assert(res.body.message, "Already logged in");
             })
             .catch(function(err) {
               throw err;
@@ -81,6 +82,25 @@ describe('user routes', () => {
   })
 
   describe('test POST route /users/login', () => {
+    it('should return error message because user already logged in', function() {
+      var agent = chai.request.agent('http://localhost:8080')
+      agent
+        .post('/users/login')
+        .send({ username: 'rick.sandchez@gmail.com', password: 'picklerick' })
+        .then((res) => {
+          expect(res).to.have.session('userId');
+          return agent.post('/users/login')
+            .then(function(res) {
+              expect(res).to.have.status(404);
+              assert(res.body.message, "Already logged in");
+            })
+            .catch(function(err) {
+              throw err;
+            });
+        });
+      agent.close();
+    });
+    
     it('should return login message if user exist', function() {
       return chai.request('http://localhost:8080')
         .post("/users/login")
