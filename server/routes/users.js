@@ -36,14 +36,17 @@ router.post('/register', (req, res) => {
     .then((data) => {
       if (data.length > 0) {
         return res.status(404).json({ message: "Username exist" });
+      } else {
+
+        users.createUser(user.username, bcrypt.hashSync(user.password, 10))
+          .then((data) => {
+            console.log(data);
+            req.session.userId = data.id;
+            return res.status(200).json({ message: "Successfull registered" });
+          })
       }
-      users.createUser(user.username, bcrypt.hashSync(user.password, 10))
-        .then((data) => {
-          console.log(data);
-          req.session.userId = data.id;
-          return res.status(200).json({ message: "Successfull registered" });
-        })
     })
+
 
 
 

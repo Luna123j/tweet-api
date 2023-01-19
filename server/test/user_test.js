@@ -10,7 +10,26 @@ const testUser2 = { username: 'test', password: 'test' };
 
 
 describe('user routes', () => {
+
   describe('test POST route /users/register', () => {
+    it('should return error message because user already logged in', function() {
+      var agent = chai.request.agent('http://localhost:8080')
+      agent
+        .post('/users/login')
+        .send({ username: 'rick.sandchez@gmail.com', password: 'picklerick' })
+        .then((res) => {
+          expect(res).to.have.session('userId');
+          return agent.post('/users/register')
+            .then(function(res) {
+              expect(res).to.have.status(404);
+            })
+            .catch(function(err) {
+              throw err;
+            });
+        });
+      agent.close();
+    });
+
     it('should return error message ask valid username', function() {
       return chai.request('http://localhost:8080')
         .post("/users/register")
@@ -50,7 +69,7 @@ describe('user routes', () => {
     it('should return register massage', function() {
       return chai.request('http://localhost:8080')
         .post("/users/register")
-        .send({ username: 'test', password: 'test' })
+        .send({ username: 'test1', password: 'test1' })
         .then((res) => {
           expect(res).to.have.status(200);
         })
@@ -121,4 +140,6 @@ describe('user routes', () => {
     });
 
   })
+
+
 })
