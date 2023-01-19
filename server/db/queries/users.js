@@ -19,22 +19,8 @@ const getUserByusername = username => {
 }
 
 const createUser = (username, password) => {
-
-  if (!username) {
-    return "Please enter valid username";
-  }
-
-  if (!password) {
-    return "Please enter valid password";
-  }
-
-  //check if username exist
-  if (getUserByusername(username) != null) {
-    return "Username exist";
-  }
-
-  return db.query("INSERT INTO users (username, password) VALUES ($1,$2) RETURN id", [username, password]).then(data => {
-    return {message:"User added",id: data.id};
+  return db.query("INSERT INTO users (username, password) VALUES ($1,$2) RETURNING id", [username, password]).then(data => {
+    return data.rows;
   })
 }
 

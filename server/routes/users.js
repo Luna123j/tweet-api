@@ -7,51 +7,79 @@ const users = require('../db/queries/users');
 router.get('/', (req, res) => {
   users.getAllUsers().then(data => {
     console.log(data);
-    res.status(200).json({users: data});
+    return res.status(200).json({ users: data });
   })
 });
 
 router.get('/:id', (req, res) => {
   users.getUserById(req.params.id).then(data => {
     console.log(data);
-    res.json({users: data});
+    return res.json({ users: data });
   })
 });
 
-
-router.post('/login',(req,res)=>{
-  const user = req.body;
-  console.log(req.body);
-  const hashedPassword = bcrypt.hashSync(user.password, 10);
-  users.getUserByusername(user.username)
-  .then(data => {
-    console.log(data);
-    if(data.length < 1){
-      return res.status(404).json({message: "User dose not exist"})
-    }
-
-    if(!bcrypt.compareSync(data[0].password,hashedPassword)){
-      return res.status(404).json({message: "Wrong Password"})
-    }
-
-    req.session.userId = data[0].id;
-    return res.status(200).json({message: "logged in"});
-  })
-})
 
 router.post('/register', (req, res) => {
   const user = req.body;
-  users.createUser(user.username,bcrypt.hashSync(user.password, 10)).then(data => {
-    console.log(data);
-    req.session.userId = data.id;
-    res.status(200).json({message: data});
-  })
+  if (req.session.userId) {
+    return res.status(400).json({ message: "Already logged in" })
+  }
+  if (!user.username) {
+    return res.status(404).json({ message: "Please enter valid username" });
+  }
+
+  if (!user.password) {
+    return res.status(404).json({ message: "Please enter valid password" });
+  }
+
+  users.getUserByusername(user.username)
+    .then((data) => {
+      if (data.length > 0) {
+        return res.status(404).json({ message: "Username exist" });
+      }
+      users.createUser(user.username, bcrypt.hashSync(user.password, 10))
+        .then((data) => {
+          console.log(data);
+          req.session.userId = data.id;
+          return res.status(200).json({ message: "Successfull registered" });
+        })
+    })
+
+
+
 });
+
+
+router.post('/login', (req, res) => {
+  const user = req.body;
+  console.log(req.session);
+  const hashedPassword = bcrypt.hashSync(user.password, 10);
+
+  if (req.session.userId) {
+    return res.status(400).json({ message: "Already logged in" })
+  }
+
+  users.getUserByusername(user.username)
+    .then(data => {
+      if (data.length < 1) {
+        return res.status(404).json({ message: "User dose not exist" })
+      }
+
+      if (!bcrypt.compareSync(data[0].password, hashedPassword)) {
+        return res.status(404).json({ message: "Wrong Password" })
+      }
+
+      req.session.userId = data[0].id;
+
+      return res.status(200).json({ message: "Success logged in" });
+    })
+})
+
 
 
 router.post("/logout", (req, res) => {
   req.session = null; //clear all cookies
-  res.status(200).json({message: "logged out"});
+  res.status(200).json({ message: "logged out" });
 });
 
 module.exports = router;
