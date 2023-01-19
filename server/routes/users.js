@@ -18,7 +18,6 @@ router.get('/:id', (req, res) => {
   })
 });
 
-
 router.post('/register', (req, res) => {
   const user = req.body;
   if (req.session.userId) {
