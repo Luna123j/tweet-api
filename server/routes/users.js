@@ -55,7 +55,6 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
   const user = req.body;
   console.log(req.session);
-  const hashedPassword = bcrypt.hashSync(user.password, 10);
 
   if (req.session.userId) {
     return res.status(400).json({ message: "Already logged in" })
@@ -67,11 +66,10 @@ router.post('/login', (req, res) => {
         return res.status(404).json({ message: "User dose not exist" })
       }
 
-      console.log("wwwwwwwwwwwww",data[0].password, hashedPassword)
-      if (bcrypt.compareSync(data[0].password, hashedPassword)) {
+      console.log("wwwwwwwwwwwww",bcrypt.compareSync(user.password,data[0].password))
+      if (!bcrypt.compareSync(user.password,data[0].password)) {
         return res.status(404).json({ message: "Wrong Password" })
       }
-
       req.session.userId = data[0].id;
 
       return res.status(200).json({ message: "Success logged in" });
