@@ -45,7 +45,10 @@ router.post('/register', (req, res) => {
 });
 
 
-
+router.post("/logout", (req, res) => {
+  req.session = null; //clear all cookies
+  res.json({message: "logged out"});
+});
 
 module.exports = router;
 
