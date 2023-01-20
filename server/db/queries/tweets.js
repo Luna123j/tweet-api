@@ -41,18 +41,21 @@ const deleteTweet = (tweet_id)=>{
   })
 }
 
+//check if current user liked the tweet
 const checkLikeCondition = (tweet_id,user_id) =>{
   return db.query("SELECT * FROM tweets WHERE id = $1 AND $2 = ANY (likes)",[tweet_id,user_id]).then(data => {
     return data.rows;
   })
 }
 
+//like a tweet by add user id into likes array
 const likeTweet = (tweet_id,user_id)=>{
     return db.query("UPDATE tweets SET likes = array_append(likes, $1) WHERE id = $2 RETURNING *",[user_id, tweet_id]).then(data => {
     return data.rows;
   })
 }
 
+//unlike a tweet by remove user id from likes array
 const unlikeTweet = (tweet_id,user_id)=>{
   return db.query("UPDATE tweets SET likes = array_remove(likes, $1) WHERE id = $2 RETURNING *",[user_id, tweet_id]).then(data => {
   return data.rows;
