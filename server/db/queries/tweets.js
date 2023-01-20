@@ -59,4 +59,5 @@ const unlikeTweet = (tweet_id,user_id)=>{
 })
 }
 
+
 module.exports = { getAllTweets,getTweetsById,getTweetsByUser,createTweet,updateTweet,deleteTweet,checkLikeCondition,likeTweet,unlikeTweet }
