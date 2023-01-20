@@ -41,7 +41,7 @@ router.post('/register', (req, res) => {
         users.createUser(user.username, bcrypt.hashSync(user.password, 10))
           .then((data) => {
             console.log(data);
-            req.session.userId = data.id;
+            req.session.userId = data[0].id;
             return res.status(200).json({ message: "Successfull registered" });
           })
       }

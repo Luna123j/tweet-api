@@ -20,12 +20,13 @@ router.get('/:id', (req, res) => {
   })
 });
 
+
 router.post('/create', async (req, res) => {
-  const user_id = req.body.user_id;
+  const user_id = req.session.userId;
   const text = req.body.text;
   let check;
 
-  if (!req.session.userId) {
+  if (!user_id) {
     return res.status(400).json({ message: "Please Log in" })
   }
 
@@ -52,7 +53,7 @@ router.put('/update/:id', async (req, res) => {
   const tweet_id=req.params.id;
   const text = req.body.text;
   let check;
-  if (!req.session.userId) {
+  if (!user_id) {
     return res.status(400).json({ message: "Please Log in" })
   }
 
@@ -79,7 +80,7 @@ router.delete('/delete/:id', async(req, res) => {
   const tweet_id=req.params.id;
   let check;
 
-  if (!req.session.userId) {
+  if (!user_id) {
     return res.status(400).json({ message: "Please Log in" })
   }
 
@@ -98,47 +99,59 @@ router.delete('/delete/:id', async(req, res) => {
   })
 })
 
-// router.put('/like', async(req, res) => {
-//   const user_id=req.body.user_id;
-//   const tweet_id=req.body.tweet_id;
-//   let check;
-//   let checkUser;
-//   let checkLikeCondition;
-//   try {
-//     check =  await tweets.getTweetsById(tweet_id)
-//   } catch (error) {
-//     return console.log(error)
-//   }
 
-//   if(check.length<1){
-//     return res.status(400).json({message:"tweet does not exist"})
-//   }
+//route to like/unlike tweet
 
-//   try {
-//     checkUser =  await users.getUserById(user_id)
-//   } catch (error) {
-//     return console.log(error)
-//   }
+router.put('/like', async(req, res) => {
+  const user_id=req.session.userId;
+  const tweet_id=req.body.tweet_id;
+  let check;
+  let checkUser;
+  let checkLikeCondition;
 
-//   if(checkUser.length < 1){
-//     return res.status(400).json({message:"User does not exist"})
-//   }
+  if (!user_id) {
+    return res.status(400).json({ message: "Please Log in" })
+  }
+
+  try {
+    check =  await tweets.getTweetsById(tweet_id)
+  } catch (error) {
+    return console.log(error)
+  }
+
+  if(check.length<1){
+    return res.status(400).json({message:"tweet does not exist"})
+  }
+
+  try {
+    checkUser =  await users.getUserById(user_id)
+  } catch (error) {
+    return console.log(error)
+  }
+
+  if(checkUser.length < 1){
+    return res.status(400).json({message:"User does not exist"})
+  }
 
 
-//   try {
-//     checkLikeCondition =  await tweets.checkLikeCondition(tweet_id,user_id)
-//   } catch (error) {
-//     return console.log(error)
-//   }
+  try {
+    checkLikeCondition =  await tweets.checkLikeCondition(tweet_id,user_id)
+  } catch (error) {
+    return console.log(error)
+  }
 
-//   if(checkLikeCondition.length>0){
-//     return res.status(400).json({message:"This tweet has been liked by current user"})
-//   }
+  if(checkLikeCondition.length>0){
+    tweets.unlikeTweet(tweet_id,user_id).then(data => {
+      return res.status(200).json({ Message:"unliked",tweet: data });
+    })
+  }else{
 
-//   tweets.likeTweet(tweet_id,user_id).then(data => {
-//     return res.status(200).json({ tweet: data });
-//   })
+    tweets.likeTweet(tweet_id,user_id).then(data => {
+      return res.status(200).json({Message:"liked",tweet: data });
+    })
+  }
 
-// })
+
+})
 
 module.exports = router;
