@@ -40,4 +40,23 @@ const deleteTweet = (tweet_id)=>{
     return data.rows;
   })
 }
-module.exports = { getAllTweets,getTweetsById,getTweetsByUser,createTweet,updateTweet,deleteTweet }
+
+const checkLikeCondition = (tweet_id,user_id) =>{
+  return db.query("SELECT * FROM tweets WHERE id = $1 AND $2 = ANY (likes)",[tweet_id,user_id]).then(data => {
+    return data.rows;
+  })
+}
+
+const likeTweet = (tweet_id,user_id)=>{
+    return db.query("UPDATE tweets SET likes = array_append(likes, $1) WHERE id = $2 RETURNING *",[user_id, tweet_id]).then(data => {
+    return data.rows;
+  })
+}
+
+const unlikeTweet = (tweet_id,user_id)=>{
+  return db.query("UPDATE tweets SET likes = array_remove(likes, $1) WHERE id = $2 RETURNING *",[user_id, tweet_id]).then(data => {
+  return data.rows;
+})
+}
+
+module.exports = { getAllTweets,getTweetsById,getTweetsByUser,createTweet,updateTweet,deleteTweet,checkLikeCondition,likeTweet,unlikeTweet }

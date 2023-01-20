@@ -20,6 +20,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/register', (req, res) => {
   const user = req.body;
+  console.log(req.body)
   if (req.session.userId) {
     return res.status(400).json({ message: "Already logged in" })
   }
@@ -68,7 +69,7 @@ router.post('/login', (req, res) => {
 
       console.log("wwwwwwwwwwwww",bcrypt.compareSync(user.password,data[0].password))
       if (!bcrypt.compareSync(user.password,data[0].password)) {
-        return res.status(404).json({ message: "Wrong Password" })
+        return res.status(400).json({ message: "Wrong Password" })
       }
       req.session.userId = data[0].id;
 
