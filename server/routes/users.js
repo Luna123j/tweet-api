@@ -77,7 +77,6 @@ router.post('/login', (req, res) => {
 })
 
 
-
 router.post("/logout", (req, res) => {
   req.session = null; //clear all cookies
   res.status(200).json({ message: "logged out" });

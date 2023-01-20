@@ -13,9 +13,16 @@ const getTweetsById = (id) => {
   })
 }
 
+//read tweet
+const getTweetsByUser= (username) => {
+  return db.query("SELECT * FROM tweets WHERE username= $1;",[username]).then(data => {
+    return data.rows;
+  })
+}
+
 //create tweet
 const createTweet = (text,user_id)=>{
-  return db.query("INSERT INTO tweets (text,user_id) VALUES ($1, $2); RETURNING *",[text,user_id]).then(data => {
+  return db.query("INSERT INTO tweets (text,user_id) VALUES ($1, $2) RETURNING * ;",[text,user_id]).then(data => {
     return data.rows;
   })
 }
@@ -33,4 +40,4 @@ const deleteTweet = (tweet_id)=>{
     return data.rows;
   })
 }
-module.exports = { getAllTweets,getTweetsById,createTweet,updateTweet,deleteTweet }
+module.exports = { getAllTweets,getTweetsById,getTweetsByUser,createTweet,updateTweet,deleteTweet }
