@@ -18,14 +18,14 @@ Social Media API that allows user registration, login/logout. User may create ne
 
 ### Tweet
 
-- GET /tweets/:id
+- GET /tweets/:id (see a tweet depents on its id)
 
 (following route requires user login)
 - POST /tweets/create -> (add a tweet for current user)
-- PUT /tweets/update/:id -> (edit a tweet for current user)
-- PUT /tweets/delete/:id -> (delete a tweet for current user)
-- PUT /tweets/like/:id -> (like/unlike a tweet for current user)
-- PUT /tweets/retweet/:id -> (retweet a tweet for current user)
+- PUT /tweets/update/:id -> (edit a tweet depends on its id for current user)
+- PUT /tweets/delete/:id -> (delete a tweet depends on its id for current user)
+- PUT /tweets/like/:id -> (like/unlike a tweet depends on its id for current user)
+- PUT /tweets/retweet/:id -> (retweet a tweet depends on its id for current user)
 
 ### Dependencies
 
