@@ -43,19 +43,34 @@ router.post('/create', async (req, res) => {
   })
 })
 
-// router.put('/update/:id', (req, res) => {
-//   const tweet_id=req.params.id;
-//   const text = req.body.text;
-//   tweets.updateTweet(text,tweet_id).then(data => {
-//     return res.status(200).json({ tweet: data });
-//   })
-// })
+router.put('/update/:id', async (req, res) => {
+  const tweet_id=req.params.id;
+  const text = req.body.text;
+  let check;
+  if(!text){
+    return res.status(400).json({message:"Please Enter a tweet"})
+  }
 
-// router.delete('/delete/:id', (req, res) => {
-//   const tweet_id=req.params.id;
-//   tweets.deleteTweet(tweet_id).then(data => {
-//     return res.status(200).json({ Message: "deleted !" });
-//   })
-// })
+  try {
+    check =  await tweets.getTweetsById(tweet_id)
+  } catch (error) {
+    return console.log(error)
+  }
+
+  if(check.length<1){
+    return res.status(400).json({message:"tweet does not exist"})
+  }
+
+  tweets.updateTweet(text,tweet_id).then(data => {
+    return res.status(200).json({ tweet: data });
+  })
+})
+
+router.delete('/delete/:id', (req, res) => {
+  const tweet_id=req.params.id;
+  tweets.deleteTweet(tweet_id).then(data => {
+    return res.status(200).json({ Message: "deleted !" });
+  })
+})
 
 module.exports = router;

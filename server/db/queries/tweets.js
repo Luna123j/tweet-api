@@ -29,7 +29,7 @@ const createTweet = (text,user_id)=>{
 //update tweet
 
 const updateTweet = (text,tweet_id)=>{
-  return db.query("UPDATE tweets SET text = $1 WHERE id = $2; RETURNING * ",[text,tweet_id]).then(data => {
+  return db.query("UPDATE tweets SET text = $1 WHERE id = $2 RETURNING * ;",[text,tweet_id]).then(data => {
     return data.rows;
   })
 }
