@@ -36,7 +36,7 @@ const updateTweet = (text,tweet_id)=>{
 //delete tweet
 
 const deleteTweet = (tweet_id)=>{
-  return db.query("DELETE FROM tweets WHERE id = $1; ",[tweet_id]).then(data => {
+  return db.query("DELETE FROM tweets WHERE id = $1 ; ",[tweet_id]).then(data => {
     return data.rows;
   })
 }

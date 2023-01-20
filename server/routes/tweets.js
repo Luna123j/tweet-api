@@ -66,10 +66,21 @@ router.put('/update/:id', async (req, res) => {
   })
 })
 
-router.delete('/delete/:id', (req, res) => {
+router.delete('/delete/:id', async(req, res) => {
   const tweet_id=req.params.id;
+  let check;
+  try {
+    check =  await tweets.getTweetsById(tweet_id)
+  } catch (error) {
+    return console.log(error)
+  }
+
+  if(check.length<1){
+    return res.status(400).json({message:"tweet does not exist"})
+  }
+
   tweets.deleteTweet(tweet_id).then(data => {
-    return res.status(200).json({ Message: "deleted !" });
+    return res.status(200).json({ Message: "deleted!" });
   })
 })
 
