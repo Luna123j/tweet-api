@@ -72,7 +72,7 @@ describe('user routes', () => {
       return chai.request('http://localhost:8080')
       .post("/users/login")
       .type('form')
-      .send({ username: 'test', password: 'test' })
+      .send({ username: 'test1', password: 'test1' })
       .then((res) => {
         expect(res).to.have.status(200);
         assert(res.body.message, "Success logged in");
